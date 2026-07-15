@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "prisma:generate": "prisma generate",
@@ -14,7 +14,8 @@
     "prisma:seed": "prisma db seed",
     "prisma:studio": "prisma studio",
     "prisma:verify": "tsx scripts/verify-neon-data.ts",
-    "admin:create": "tsx scripts/create-admin.ts"
+    "admin:create": "tsx scripts/create-admin.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
