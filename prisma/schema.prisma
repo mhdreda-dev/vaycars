@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum VehicleAvailability {
+  AVAILABLE
+  UNAVAILABLE
+  MAINTENANCE
+  RESERVED
+}
+
+enum FuelType {
+  DIESEL
+  GASOLINE
+  HYBRID
+  ELECTRIC
+}
+
+enum TransmissionType {
+  MANUAL
+  AUTOMATIC
+}
+
+model VehicleCategory {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  nameFr        String
+  nameAr        String
+  descriptionFr String?
+  descriptionAr String?
+  active        Boolean   @default(true)
+  displayOrder  Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  vehicles      Vehicle[]
+}
+
+model Vehicle {
+  id                 String              @id @default(cuid())
+  slug               String              @unique
+  brand              String
+  model              String
+  year               Int?
+  categoryId         String
+  category           VehicleCategory     @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  fuel               FuelType
+  transmission       TransmissionType
+  seats              Int
+  doors              Int
+  luggage            Int
+  airConditioning    Boolean             @default(true)
+  availability       VehicleAvailability @default(AVAILABLE)
+  featured           Boolean             @default(false)
+  active             Boolean             @default(true)
+  badgeFr            String?
+  badgeAr            String?
+  colorFr            String?
+  colorAr            String?
+  shortDescriptionFr String
+  shortDescriptionAr String
+  fullDescriptionFr  String
+  fullDescriptionAr  String
+  priceNoteFr        String              @default("Tarif selon la période")
+  priceNoteAr        String              @default("الثمن حسب المدة والتاريخ")
+  displayOrder       Int                 @default(0)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  images             VehicleImage[]
+
+  @@index([categoryId])
+  @@index([active, displayOrder])
+}
+
+model VehicleImage {
+  id           String   @id @default(cuid())
+  vehicleId    String
+  vehicle      Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  url          String
+  altFr        String?
+  altAr        String?
+  isMain       Boolean  @default(false)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  @@unique([vehicleId, url])
+  @@index([vehicleId])
+  @@index([displayOrder])
+}
+
+model PickupLocation {
+  id          String         @id @default(cuid())
+  slug        String         @unique
+  nameFr      String
+  nameAr      String
+  city        String
+  active      Boolean        @default(true)
+  displayOrder Int           @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  siteSettings SiteSettings[] @relation("DefaultPickupLocation")
+}
+
+model SiteSettings {
+  id                      String          @id
+  agencyName              String
+  phone                   String
+  whatsappNumber          String
+  city                    String
+  country                 String
+  defaultLocale           String          @default("fr")
+  defaultPickupLocationId String?
+  defaultPickupLocation   PickupLocation? @relation("DefaultPickupLocation", fields: [defaultPickupLocationId], references: [id], onDelete: SetNull)
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime        @updatedAt
+
+  @@index([defaultPickupLocationId])
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

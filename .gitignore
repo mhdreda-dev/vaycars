@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Generated Prisma client (regenerate with npm run prisma:generate)
+/src/generated/prisma
