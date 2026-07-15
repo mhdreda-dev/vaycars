@@ -165,7 +165,7 @@ export function RoadCtaSection({ rtl = false }: { rtl?: boolean }) {
           }
           fill
           sizes="100vw"
-          priority={false}
+          loading="lazy"
           className="object-cover object-[68%_center]"
         />
       </motion.div>
@@ -296,6 +296,7 @@ export function AboutVayCarsSection({ rtl = false }: { rtl?: boolean }) {
                 : "Remise de clés d’une voiture à Sidi Kacem"
             }
             fill
+            loading="lazy"
             sizes="(max-width: 1024px) 100vw, 50vw"
             className="object-cover"
           />
