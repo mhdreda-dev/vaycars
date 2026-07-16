@@ -93,8 +93,8 @@ async function main() {
     for (const [displayOrder, url] of vehicle.images.entries()) {
       await prisma.vehicleImage.upsert({
         where: { vehicleId_url: { vehicleId: record.id, url } },
-        update: { altFr: `${vehicle.brand} ${vehicle.model} - Vay Cars Location`, altAr: `${vehicle.brand} ${vehicle.model} - فاي كارز`, isMain: displayOrder === 0, displayOrder },
-        create: { vehicleId: record.id, url, altFr: `${vehicle.brand} ${vehicle.model} - Vay Cars Location`, altAr: `${vehicle.brand} ${vehicle.model} - فاي كارز`, isMain: displayOrder === 0, displayOrder },
+        update: { altFr: `${vehicle.brand} ${vehicle.model} - Vay Cars Location`, altAr: `${vehicle.brand} ${vehicle.model} - Vay Cars`, isMain: displayOrder === 0, displayOrder },
+        create: { vehicleId: record.id, url, altFr: `${vehicle.brand} ${vehicle.model} - Vay Cars Location`, altAr: `${vehicle.brand} ${vehicle.model} - Vay Cars`, isMain: displayOrder === 0, displayOrder },
       });
     }
   }

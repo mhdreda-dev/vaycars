@@ -16,7 +16,7 @@ export type PublicSiteSettings = { agencyName: string; phone: string; whatsappNu
 
 const availabilityLabels = {
   fr: { AVAILABLE: "Disponible", UNAVAILABLE: "Indisponible actuellement", MAINTENANCE: "En entretien", RESERVED: "Réservée" },
-  ar: { AVAILABLE: "متوفرة", UNAVAILABLE: "غير متوفرة حالياً", MAINTENANCE: "قيد الصيانة", RESERVED: "محجوزة" },
+  ar: { AVAILABLE: "متوفرة", UNAVAILABLE: "ما متوفراش دابا", MAINTENANCE: "فالصيانة", RESERVED: "محجوزة" },
 } as const;
 
 export function mapDatabaseVehicleToPublic(vehicle: DatabaseVehicle, locale: "fr" | "ar"): PublicVehicle {
@@ -26,7 +26,7 @@ export function mapDatabaseVehicleToPublic(vehicle: DatabaseVehicle, locale: "fr
   return {
     id: vehicle.id, slug: vehicle.slug, brand: vehicle.brand, model: vehicle.model, year: vehicle.year ?? undefined,
     category: arabic ? vehicle.category.nameAr : vehicle.category.nameFr, categorySlug: vehicle.category.slug,
-    fuel: vehicle.fuel === "DIESEL" ? (arabic ? "ديزل" : "Diesel") : vehicle.fuel === "GASOLINE" ? (arabic ? "بنزين" : "Essence") : vehicle.fuel === "HYBRID" ? (arabic ? "هجين" : "Hybride") : (arabic ? "كهربائية" : "Électrique"),
+    fuel: vehicle.fuel === "DIESEL" ? (arabic ? "مازوط" : "Diesel") : vehicle.fuel === "GASOLINE" ? (arabic ? "ليصانص" : "Essence") : vehicle.fuel === "HYBRID" ? (arabic ? "هايبريد" : "Hybride") : (arabic ? "كهربا" : "Électrique"),
     transmission: vehicle.transmission === "AUTOMATIC" ? (arabic ? "أوتوماتيك" : "Automatique") : (arabic ? "يدوية" : "Manuelle"), transmissionCode: vehicle.transmission,
     seats: vehicle.seats, doors: vehicle.doors, luggage: vehicle.luggage, airConditioning: vehicle.airConditioning,
     availability: vehicle.availability, availabilityLabel: availabilityLabels[locale][vehicle.availability], featured: vehicle.featured, active: vehicle.active,
