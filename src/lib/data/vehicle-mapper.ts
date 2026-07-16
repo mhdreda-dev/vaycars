@@ -7,7 +7,7 @@ export type PublicVehicle = {
   fuel: string; transmission: string; transmissionCode: "MANUAL" | "AUTOMATIC"; seats: number; doors: number; luggage: number;
   airConditioning: boolean; availability: "AVAILABLE" | "UNAVAILABLE" | "MAINTENANCE" | "RESERVED"; availabilityLabel: string;
   featured: boolean; active: boolean; badge?: string; color?: string; shortDescription: string; fullDescription: string;
-  priceNote: string; displayOrder: number; mainImage: string; images: string[];
+  priceNote: string; displayOrder: number; mainImage: string; mainImageAlt: string; images: string[];
   isEconomy: boolean;
 };
 
@@ -22,6 +22,7 @@ const availabilityLabels = {
 export function mapDatabaseVehicleToPublic(vehicle: DatabaseVehicle, locale: "fr" | "ar"): PublicVehicle {
   const arabic = locale === "ar";
   const images = vehicle.images.map((image) => image.url);
+  const mainImage = vehicle.images[0];
   return {
     id: vehicle.id, slug: vehicle.slug, brand: vehicle.brand, model: vehicle.model, year: vehicle.year ?? undefined,
     category: arabic ? vehicle.category.nameAr : vehicle.category.nameFr, categorySlug: vehicle.category.slug,
@@ -31,7 +32,7 @@ export function mapDatabaseVehicleToPublic(vehicle: DatabaseVehicle, locale: "fr
     availability: vehicle.availability, availabilityLabel: availabilityLabels[locale][vehicle.availability], featured: vehicle.featured, active: vehicle.active,
     badge: (arabic ? vehicle.badgeAr : vehicle.badgeFr) ?? undefined, color: (arabic ? vehicle.colorAr : vehicle.colorFr) ?? undefined,
     shortDescription: arabic ? vehicle.shortDescriptionAr : vehicle.shortDescriptionFr, fullDescription: arabic ? vehicle.fullDescriptionAr : vehicle.fullDescriptionFr,
-    priceNote: arabic ? vehicle.priceNoteAr : vehicle.priceNoteFr, displayOrder: vehicle.displayOrder, mainImage: images[0] ?? "", images,
+    priceNote: arabic ? vehicle.priceNoteAr : vehicle.priceNoteFr, displayOrder: vehicle.displayOrder, mainImage: mainImage?.url ?? "", mainImageAlt: (arabic ? mainImage?.altAr : mainImage?.altFr) ?? `${vehicle.brand} ${vehicle.model}`, images,
     isEconomy: vehicle.category.slug === "economique" || vehicle.badgeFr === "Économique",
   };
 }

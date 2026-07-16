@@ -93,7 +93,7 @@ BLOB_READ_WRITE_TOKEN=""
 ```
 
 The upload token endpoint is protected by the existing administrator session.
-It accepts JPEG, PNG, WebP, and AVIF images up to 10 MB and only grants writes
+It accepts JPEG, PNG, and WebP images up to 8 MB and only grants writes
 below the `vehicles/` Blob prefix. Uploaded public Blob URLs are saved to
 `VehicleImage` only when the vehicle form is saved. Existing local and HTTPS
 URLs remain supported. Never commit the Blob token.
