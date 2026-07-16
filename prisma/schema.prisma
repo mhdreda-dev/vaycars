@@ -113,6 +113,26 @@ model SiteSettings {
   whatsappNumber          String
   city                    String
   country                 String
+  shortDescriptionFr      String?
+  shortDescriptionAr      String?
+  email                   String?
+  cityAr                  String?
+  addressFr               String?
+  addressAr               String?
+  googleMapsUrl           String?
+  instagramUrl            String?
+  facebookUrl             String?
+  logoUrl                 String?
+  heroImageUrl            String?
+  seoTitleFr              String?
+  seoTitleAr              String?
+  seoDescriptionFr        String?
+  seoDescriptionAr        String?
+  businessHoursFr         String?
+  businessHoursAr         String?
+  defaultWhatsappFr       String?
+  defaultWhatsappAr       String?
+  floatingWhatsappActive  Boolean         @default(true)
   defaultLocale           String          @default("fr")
   defaultPickupLocationId String?
   defaultPickupLocation   PickupLocation? @relation("DefaultPickupLocation", fields: [defaultPickupLocationId], references: [id], onDelete: SetNull)
