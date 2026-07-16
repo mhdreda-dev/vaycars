@@ -4,7 +4,7 @@ import type { DatabaseVehicle } from "./vehicles";
 
 export type PublicVehicle = {
   id: string; slug: string; brand: string; model: string; year?: number; category: string; categorySlug: string;
-  fuel: string; transmission: string; transmissionCode: "MANUAL" | "AUTOMATIC"; seats: number; doors: number; luggage: number;
+  fuel: string; transmission: string; transmissionCode: "MANUAL" | "AUTOMATIC"; seats: number; doors: number; luggage?: number;
   airConditioning: boolean; availability: "AVAILABLE" | "UNAVAILABLE" | "MAINTENANCE" | "RESERVED"; availabilityLabel: string;
   featured: boolean; active: boolean; badge?: string; color?: string; shortDescription: string; fullDescription: string;
   priceNote: string; displayOrder: number; mainImage: string; mainImageAlt: string; images: string[];
@@ -28,11 +28,11 @@ export function mapDatabaseVehicleToPublic(vehicle: DatabaseVehicle, locale: "fr
     category: arabic ? vehicle.category.nameAr : vehicle.category.nameFr, categorySlug: vehicle.category.slug,
     fuel: vehicle.fuel === "DIESEL" ? (arabic ? "مازوط" : "Diesel") : vehicle.fuel === "GASOLINE" ? (arabic ? "ليصانص" : "Essence") : vehicle.fuel === "HYBRID" ? (arabic ? "هايبريد" : "Hybride") : (arabic ? "كهربا" : "Électrique"),
     transmission: vehicle.transmission === "AUTOMATIC" ? (arabic ? "أوتوماتيك" : "Automatique") : (arabic ? "يدوية" : "Manuelle"), transmissionCode: vehicle.transmission,
-    seats: vehicle.seats, doors: vehicle.doors, luggage: vehicle.luggage, airConditioning: vehicle.airConditioning,
+    seats: vehicle.seats, doors: vehicle.doors, luggage: vehicle.luggage ?? undefined, airConditioning: vehicle.airConditioning,
     availability: vehicle.availability, availabilityLabel: availabilityLabels[locale][vehicle.availability], featured: vehicle.featured, active: vehicle.active,
     badge: (arabic ? vehicle.badgeAr : vehicle.badgeFr) ?? undefined, color: (arabic ? vehicle.colorAr : vehicle.colorFr) ?? undefined,
-    shortDescription: arabic ? vehicle.shortDescriptionAr : vehicle.shortDescriptionFr, fullDescription: arabic ? vehicle.fullDescriptionAr : vehicle.fullDescriptionFr,
-    priceNote: arabic ? vehicle.priceNoteAr : vehicle.priceNoteFr, displayOrder: vehicle.displayOrder, mainImage: mainImage?.url ?? "", mainImageAlt: (arabic ? mainImage?.altAr : mainImage?.altFr) ?? `${vehicle.brand} ${vehicle.model}`, images,
+    shortDescription: (arabic ? vehicle.shortDescriptionAr : vehicle.shortDescriptionFr) ?? (arabic ? `شوف ${vehicle.brand} ${vehicle.model} المتوفرة للكراء عند Vay Cars.` : `Découvrez la ${vehicle.brand} ${vehicle.model}, disponible à la location chez Vay Cars.`), fullDescription: (arabic ? vehicle.fullDescriptionAr : vehicle.fullDescriptionFr) ?? (arabic ? vehicle.shortDescriptionAr : vehicle.shortDescriptionFr) ?? (arabic ? `شوف ${vehicle.brand} ${vehicle.model} المتوفرة للكراء عند Vay Cars.` : `Découvrez la ${vehicle.brand} ${vehicle.model}, disponible à la location chez Vay Cars.`),
+    priceNote: (arabic ? vehicle.priceNoteAr : vehicle.priceNoteFr) ?? (arabic ? "الثمن على حساب التاريخ والمدة" : "Tarif selon la période"), displayOrder: vehicle.displayOrder, mainImage: mainImage?.url ?? "", mainImageAlt: (arabic ? mainImage?.altAr : mainImage?.altFr) ?? `${vehicle.brand} ${vehicle.model}`, images,
     isEconomy: vehicle.category.slug === "economique" || vehicle.badgeFr === "Économique",
   };
 }

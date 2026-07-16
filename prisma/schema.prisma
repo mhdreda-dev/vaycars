@@ -49,12 +49,12 @@ model Vehicle {
   year               Int?
   categoryId         String
   category           VehicleCategory     @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  fuel               FuelType
-  transmission       TransmissionType
+  fuel               FuelType            @default(DIESEL)
+  transmission       TransmissionType    @default(MANUAL)
   seats              Int
   doors              Int
-  luggage            Int
-  airConditioning    Boolean             @default(true)
+  luggage            Int?
+  airConditioning    Boolean             @default(false)
   availability       VehicleAvailability @default(AVAILABLE)
   featured           Boolean             @default(false)
   active             Boolean             @default(true)
@@ -62,12 +62,12 @@ model Vehicle {
   badgeAr            String?
   colorFr            String?
   colorAr            String?
-  shortDescriptionFr String
-  shortDescriptionAr String
-  fullDescriptionFr  String
-  fullDescriptionAr  String
-  priceNoteFr        String              @default("Tarif selon la période")
-  priceNoteAr        String              @default("الثمن حسب المدة والتاريخ")
+  shortDescriptionFr String?
+  shortDescriptionAr String?
+  fullDescriptionFr  String?
+  fullDescriptionAr  String?
+  priceNoteFr        String?             @default("Tarif selon la période")
+  priceNoteAr        String?             @default("الثمن على حساب التاريخ والمدة")
   displayOrder       Int                 @default(0)
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt

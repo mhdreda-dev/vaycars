@@ -62,7 +62,7 @@ export function VehicleForm({ categories, initial, vehicleId, blobConfigured = f
     setMessage(""); setErrors({});
     const payload = {
       ...value, year: value.year ? Number(value.year) : null, seats: Number(value.seats), doors: Number(value.doors),
-      luggage: Number(value.luggage), displayOrder: Number(value.displayOrder),
+      luggage: value.luggage === "" ? null : Number(value.luggage), displayOrder: value.displayOrder === "" ? 0 : Number(value.displayOrder),
       images: value.images.map((image, index) => ({ ...image, displayOrder: index })),
     };
     const clientValidation = vehicleInputSchema.safeParse(payload);
