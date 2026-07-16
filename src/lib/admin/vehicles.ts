@@ -9,7 +9,7 @@ const pageSize = 10;
 const sortOptions = { order: { displayOrder: "asc" }, updated: { updatedAt: "desc" }, created: { createdAt: "desc" }, brandAsc: { brand: "asc" }, brandDesc: { brand: "desc" }, modelAsc: { model: "asc" } } as const;
 export type AdminVehicleFilters = { search?: string; category?: string; availability?: VehicleAvailability; active?: "true" | "false"; featured?: "true" | "false"; transmission?: TransmissionType; sort?: keyof typeof sortOptions; page?: number };
 
-export async function getAdminVehicleFilterOptions() { await requireAdmin(); return prisma.vehicleCategory.findMany({ select: { id: true, slug: true, nameFr: true }, orderBy: { displayOrder: "asc" } }); }
+export async function getAdminVehicleFilterOptions() { await requireAdmin(); return prisma.vehicleCategory.findMany({ where: { active: true }, select: { id: true, slug: true, nameFr: true }, orderBy: { displayOrder: "asc" } }); }
 export async function getAdminVehicleById(id: string) { await requireAdmin(); return prisma.vehicle.findUnique({ where: { id }, include: { images: { orderBy: [{ isMain: "desc" }, { displayOrder: "asc" }] } } }); }
 export async function getNextAdminDisplayOrder() { await requireAdmin(); const last = await prisma.vehicle.findFirst({ orderBy: { displayOrder: "desc" }, select: { displayOrder: true } }); return (last?.displayOrder ?? 0) + 1; }
 

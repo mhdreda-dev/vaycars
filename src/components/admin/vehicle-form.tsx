@@ -37,7 +37,7 @@ function slugify(value: string) {
 export function VehicleForm({ categories, initial = emptyVehicle, vehicleId, blobConfigured = false }: {
   categories: { id: string; nameFr: string }[]; initial?: VehicleFormValue; vehicleId?: string; blobConfigured?: boolean;
 }) {
-  const [value, setValue] = useState(initial);
+  const [value, setValue] = useState<VehicleFormValue>(() => ({ ...emptyVehicle, ...initial, images: initial.images ?? [] }));
   const [manualSlug, setManualSlug] = useState(Boolean(vehicleId));
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState("");
@@ -79,7 +79,7 @@ export function VehicleForm({ categories, initial = emptyVehicle, vehicleId, blo
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 className="text-lg font-black text-[#10233c]">Informations principales</h2><div className="mt-5 grid gap-4 sm:grid-cols-2">
       <label>Marque *<input value={value.brand} onChange={(e) => onBrandModel("brand", e.target.value)} className={imageInput} />{fieldError("brand")}</label><label>Modèle *<input value={value.model} onChange={(e) => onBrandModel("model", e.target.value)} className={imageInput} />{fieldError("model")}</label>
       <label className="sm:col-span-2">Slug *<input value={value.slug} onChange={(e) => { setManualSlug(true); update("slug", slugify(e.target.value)); }} className={imageInput} />{fieldError("slug")}<p className="mt-1 text-xs text-slate-500">/fr/voitures/{value.slug || "slug"} · /ar/cars/{value.slug || "slug"}</p></label>
-      <label>Année<input type="number" value={value.year} onChange={(e) => update("year", e.target.value)} className={imageInput} /></label><label>Catégorie *<select value={value.categoryId} onChange={(e) => update("categoryId", e.target.value)} className={imageInput}><option value="">Choisir une catégorie</option>{categories.map((category) => <option key={category.id} value={category.id}>{category.nameFr}</option>)}</select>{fieldError("categoryId")}</label>
+      <label>Année<input type="number" value={value.year} onChange={(e) => update("year", e.target.value)} className={imageInput} /></label><label>Catégorie *<select value={value.categoryId} onChange={(e) => update("categoryId", e.target.value)} className={imageInput} disabled={!categories.length}><option value="">Choisir une catégorie</option>{categories.map((category) => <option key={category.id} value={category.id}>{category.nameFr}</option>)}</select>{fieldError("categoryId")}{!categories.length && <p role="status" className="mt-2 text-sm text-amber-700">Aucune catégorie disponible. <Link href="/admin/categories" className="font-bold underline">Créez une catégorie avant d’ajouter un véhicule.</Link></p>}</label>
       <label>Couleur — Français<input value={value.colorFr} onChange={(e) => update("colorFr", e.target.value)} className={imageInput} /></label><label dir="rtl">اللون — العربية<input value={value.colorAr} onChange={(e) => update("colorAr", e.target.value)} className={imageInput} /></label>
     </div></section>
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 className="text-lg font-black text-[#10233c]">Caractéristiques techniques</h2><div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
