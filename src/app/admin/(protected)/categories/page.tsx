@@ -1,2 +1,4 @@
-import Link from "next/link";
-export default function CategoriesPlaceholder() { return <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6"><h1 className="text-3xl font-black text-[#10233c]">Catégories</h1><p className="mt-4 text-slate-600">La gestion des catégories sera disponible lors de la prochaine étape.</p><Link href="/admin" className="mt-6 inline-flex rounded-xl bg-[#0b5aa7] px-4 py-2.5 text-sm font-bold text-white">Retour au tableau de bord</Link></main>; }
+import { CategoryManager } from "@/components/admin/category-manager";
+import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/admin-session";
+export default async function CategoriesPage() { await requireAdmin(); const categories = await prisma.vehicleCategory.findMany({ orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }], include: { _count: { select: { vehicles: true } } } }); return <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6"><CategoryManager categories={categories.map(c=>({ id:c.id,nameFr:c.nameFr,nameAr:c.nameAr,slug:c.slug,icon:c.icon,displayOrder:c.displayOrder,active:c.active,updatedAt:c.updatedAt.toISOString(),vehicleCount:c._count.vehicles }))}/></main>; }

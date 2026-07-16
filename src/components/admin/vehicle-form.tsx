@@ -34,10 +34,10 @@ function slugify(value: string) {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
-export function VehicleForm({ categories, initial = emptyVehicle, vehicleId, blobConfigured = false }: {
-  categories: { id: string; nameFr: string }[]; initial?: VehicleFormValue; vehicleId?: string; blobConfigured?: boolean;
+export function VehicleForm({ categories, initial, vehicleId, blobConfigured = false }: {
+  categories: { id: string; nameFr: string }[]; initial?: Partial<VehicleFormValue>; vehicleId?: string; blobConfigured?: boolean;
 }) {
-  const [value, setValue] = useState<VehicleFormValue>(() => ({ ...emptyVehicle, ...initial, images: initial.images ?? [] }));
+  const [value, setValue] = useState<VehicleFormValue>(() => ({ ...emptyVehicle, ...initial, images: initial?.images ?? [] }));
   const [manualSlug, setManualSlug] = useState(Boolean(vehicleId));
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState("");

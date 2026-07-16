@@ -31,6 +31,7 @@ model VehicleCategory {
   slug          String    @unique
   nameFr        String
   nameAr        String
+  icon          String    @default("🚗")
   descriptionFr String?
   descriptionAr String?
   active        Boolean   @default(true)
