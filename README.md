@@ -97,3 +97,16 @@ It accepts JPEG, PNG, and WebP images up to 8 MB and only grants writes
 below the `vehicles/` Blob prefix. Uploaded public Blob URLs are saved to
 `VehicleImage` only when the vehicle form is saved. Existing local and HTTPS
 URLs remain supported. Never commit the Blob token.
+
+## Public language preference
+
+On a visitor's first public visit, the site asks them to choose French or
+Arabic. The preference is saved in both `localStorage` and the `vaycars-locale`
+cookie (one year, `Path=/`, `SameSite=Lax`), then reused by the language menu.
+To test the first-visit experience again in the browser console, run:
+
+```js
+localStorage.removeItem("vaycars-locale");
+document.cookie = "vaycars-locale=; Max-Age=0; Path=/";
+location.reload();
+```
