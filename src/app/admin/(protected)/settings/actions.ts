@@ -26,6 +26,6 @@ export async function saveSettings(input: z.input<typeof schema>) {
   if (!parsed.success) return { ok: false, message: "Vérifiez les champs indiqués.", fieldErrors: parsed.error.flatten().fieldErrors };
   const catalogueFilters = getCatalogueFilters(parsed.data.catalogueFilters) as unknown as Prisma.InputJsonValue;
   await prisma.siteSettings.upsert({ where: { id: "site-settings" }, update: { ...parsed.data, catalogueFilters }, create: { id: "site-settings", defaultLocale: "fr", ...parsed.data, catalogueFilters } });
-  ["/admin/settings", "/fr", "/ar", "/fr/voitures", "/ar/cars"].forEach((path) => revalidatePath(path));
+  ["/admin", "/admin/settings", "/fr", "/ar", "/fr/voitures", "/ar/cars"].forEach((path) => revalidatePath(path));
   return { ok: true, message: "Paramètres enregistrés" };
 }

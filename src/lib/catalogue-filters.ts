@@ -55,6 +55,13 @@ export function getCatalogueFilterLabel(filter: CatalogueFilterConfig, rtl: bool
   return rtl ? filter.labelAr : filter.labelFr;
 }
 
+export function getCatalogueFilterSource(filterId: CatalogueFilterId) {
+  if (filterId === "economique") return "Catégorie: /economique";
+  if (filterId === "AUTOMATIC") return "Transmission: AUTOMATIC";
+  if (filterId === "MANUAL") return "Transmission: MANUAL";
+  return "Tous les véhicules publics";
+}
+
 export function matchesCatalogueFilter(vehicle: { categorySlug: string; transmissionCode: "MANUAL" | "AUTOMATIC" }, filterId: CatalogueFilterId) {
   if (filterId === "all") return true;
   if (filterId === "economique") return vehicle.categorySlug === "economique";
