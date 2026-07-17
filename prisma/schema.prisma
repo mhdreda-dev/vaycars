@@ -133,6 +133,7 @@ model SiteSettings {
   defaultWhatsappFr       String?
   defaultWhatsappAr       String?
   floatingWhatsappActive  Boolean         @default(true)
+  catalogueFilters        Json?
   defaultLocale           String          @default("fr")
   defaultPickupLocationId String?
   defaultPickupLocation   PickupLocation? @relation("DefaultPickupLocation", fields: [defaultPickupLocationId], references: [id], onDelete: SetNull)

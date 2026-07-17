@@ -8,7 +8,6 @@ export type PublicVehicle = {
   airConditioning: boolean; availability: "AVAILABLE" | "UNAVAILABLE" | "MAINTENANCE" | "RESERVED"; availabilityLabel: string;
   featured: boolean; active: boolean; badge?: string; color?: string; shortDescription: string; fullDescription: string;
   priceNote: string; displayOrder: number; mainImage: string; mainImageAlt: string; images: string[]; imageAlts: string[];
-  isEconomy: boolean;
 };
 
 export type PublicPickupLocation = { id: string; slug: string; name: string };
@@ -34,7 +33,6 @@ export function mapDatabaseVehicleToPublic(vehicle: DatabaseVehicle, locale: "fr
     badge: (arabic ? vehicle.badgeAr : vehicle.badgeFr) ?? undefined, color: (arabic ? vehicle.colorAr : vehicle.colorFr) ?? undefined,
     shortDescription: (arabic ? vehicle.shortDescriptionAr : vehicle.shortDescriptionFr) ?? (arabic ? `شوف ${vehicle.brand} ${vehicle.model} المتوفرة للكراء عند Vay Cars.` : `Découvrez la ${vehicle.brand} ${vehicle.model}, disponible à la location chez Vay Cars.`), fullDescription: (arabic ? vehicle.fullDescriptionAr : vehicle.fullDescriptionFr) ?? (arabic ? vehicle.shortDescriptionAr : vehicle.shortDescriptionFr) ?? (arabic ? `شوف ${vehicle.brand} ${vehicle.model} المتوفرة للكراء عند Vay Cars.` : `Découvrez la ${vehicle.brand} ${vehicle.model}, disponible à la location chez Vay Cars.`),
     priceNote: (arabic ? vehicle.priceNoteAr : vehicle.priceNoteFr) ?? (arabic ? "الثمن على حساب التاريخ والمدة" : "Tarif selon la période"), displayOrder: vehicle.displayOrder, mainImage: mainImage?.url ?? "", mainImageAlt: (arabic ? mainImage?.altAr : mainImage?.altFr) ?? `${vehicle.brand} ${vehicle.model}`, images, imageAlts,
-    isEconomy: vehicle.category.slug === "economique" || vehicle.badgeFr === "Économique",
   };
 }
 
