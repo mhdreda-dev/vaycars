@@ -5,8 +5,6 @@ import Link from "next/link";
 import {
   motion,
   useReducedMotion,
-  useScroll,
-  useTransform,
 } from "framer-motion";
 import {
   ArrowLeft,
@@ -21,9 +19,9 @@ import {
   ShieldCheck,
   UserRoundCheck,
 } from "lucide-react";
-import { useRef } from "react";
 import { generalWhatsAppMessage } from "@/lib/whatsapp";
 import { WhatsAppLink } from "./whatsapp-link";
+import { useAgencySettings } from "./agency-settings-provider";
 
 const reveal = { hidden: { opacity: 0, y: 22 }, visible: { opacity: 1, y: 0 } };
 const frenchConditions = [
@@ -112,49 +110,37 @@ function SectionReveal({
 }
 
 export function RoadCtaSection({ rtl = false }: { rtl?: boolean }) {
-  const ref = useRef<HTMLElement>(null);
+  const settings = useAgencySettings();
   const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const imageY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    reduceMotion ? ["0%", "0%"] : ["-2%", "2%"],
-  );
   const copy = rtl
     ? {
         eyebrow: "راحتك في التنقل أولويتنا",
-        title: "انطلق بسيارة مناسبة لرحلتك",
-        description:
-          "تنقل مهني، سفر عائلي أو حاجة مؤقتة: ترافقك Vay Cars بحل بسيط وعملي.",
-        primary: "اطلب سيارة",
+        title: "واجد تنطلق بالطوموبيل اللي ناسبك؟",
+        description: `${settings.agencyName} كتأكد ليك التوفر والثمن مباشرة فالواتساب.`,
+        primary: "حجز فالواتساب",
         secondary: "اكتشف سياراتنا",
         route: "/ar/cars",
       }
     : {
         eyebrow: "VOTRE MOBILITÉ, NOTRE PRIORITÉ",
-        title: "Prenez la route avec une voiture adaptée à votre trajet",
-        description:
-          "Déplacement professionnel, voyage en famille ou besoin ponctuel : Vay Cars vous accompagne avec une solution simple et pratique.",
-        primary: "Demander une voiture",
+        title: "Prêt à prendre la route ?",
+        description: `${settings.agencyName} vous confirme la disponibilité et le tarif directement sur WhatsApp.`,
+        primary: "Réserver sur WhatsApp",
         secondary: "Voir notre flotte",
         route: "/fr/voitures",
       };
   return (
     <section
-      ref={ref}
-      className="relative isolate min-h-[460px] overflow-hidden sm:min-h-[520px] lg:min-h-[580px]"
+      className="relative isolate overflow-hidden"
       dir={rtl ? "rtl" : "ltr"}
     >
       <motion.div
-        className="absolute -inset-y-5 inset-x-0"
-        style={{ y: imageY, scale: reduceMotion ? 1 : 1.04 }}
+        className="absolute inset-0"
+        style={{ scale: reduceMotion ? 1 : 1.02 }}
         initial={{ opacity: 0.8 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true, amount: 0.18 }}
-        transition={{ duration: reduceMotion ? 0.2 : 1.1, ease: "easeOut" }}
+        transition={{ duration: reduceMotion ? 0.2 : 0.7, ease: "easeOut" }}
       >
         <Image
           src="/images/vay-cars-morocco-road.jpg"
@@ -176,7 +162,7 @@ export function RoadCtaSection({ rtl = false }: { rtl?: boolean }) {
         transition={{ duration: reduceMotion ? 0.15 : 0.65 }}
         className="absolute inset-0 bg-gradient-to-r from-[#07182d]/88 via-[#07182d]/65 to-[#07182d]/20 rtl:bg-gradient-to-l"
       />
-      <div className="relative mx-auto flex min-h-[460px] max-w-7xl items-center px-4 py-16 sm:min-h-[520px] sm:px-6 lg:min-h-[580px] lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
         <SectionReveal className="max-w-xl text-white">
           <motion.p
             variants={reveal}
@@ -188,31 +174,31 @@ export function RoadCtaSection({ rtl = false }: { rtl?: boolean }) {
           <motion.h2
             variants={reveal}
             transition={{ duration: 0.55 }}
-            className="mt-4 text-3xl font-black leading-tight tracking-tight sm:text-4xl lg:text-5xl"
+            className="mt-3 text-[1.75rem] font-black leading-tight tracking-tight min-[360px]:text-3xl sm:text-4xl"
           >
             {copy.title}
           </motion.h2>
           <motion.p
             variants={reveal}
             transition={{ duration: 0.48 }}
-            className="mt-5 max-w-lg leading-7 text-slate-200"
+            className="mt-3 max-w-lg leading-7 text-slate-200"
           >
             {copy.description}
           </motion.p>
           <motion.div
             variants={reveal}
             transition={{ duration: 0.45 }}
-            className="mt-8 flex flex-col gap-3 sm:flex-row"
+            className="mt-6 flex flex-col gap-3 sm:flex-row"
           >
             <WhatsAppLink
               message={generalWhatsAppMessage}
-              className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#16a34a] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#15803d]"
+              className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#16a34a] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-black/15 transition hover:-translate-y-0.5 hover:bg-[#15803d] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:transform-none"
             >
               {copy.primary}
             </WhatsAppLink>
             <Link
               href={copy.route}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur-sm transition hover:bg-white/20"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/40 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur-sm transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               {copy.secondary}
               {rtl ? (
@@ -229,6 +215,7 @@ export function RoadCtaSection({ rtl = false }: { rtl?: boolean }) {
 }
 
 export function AboutVayCarsSection({ rtl = false }: { rtl?: boolean }) {
+  const settings = useAgencySettings();
   const reduceMotion = useReducedMotion();
   const copy = rtl
     ? {
@@ -359,13 +346,13 @@ export function AboutVayCarsSection({ rtl = false }: { rtl?: boolean }) {
               >
                 {copy.whatsapp}
               </WhatsAppLink>
-              <a
-                href="tel:+212684040155"
+              {settings.phone && <a
+                href={`tel:+${settings.phone.replace(/\D/g, "").replace(/^0/, "212")}`}
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-[#10233c] transition hover:border-blue-200 hover:bg-blue-50"
               >
                 <Phone className="size-4" />
                 {copy.call}
-              </a>
+              </a>}
             </div>
           </motion.div>
         </SectionReveal>

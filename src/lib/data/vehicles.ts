@@ -16,11 +16,21 @@ export const getActiveVehicles = cache(async (): Promise<DatabaseVehicle[]> => {
 });
 
 export const getFeaturedVehicles = cache(async (): Promise<DatabaseVehicle[]> => {
-  return prisma.vehicle.findMany({ where: { active: true, featured: true }, include: vehicleInclude, orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }] });
+  return prisma.vehicle.findMany({ where: { active: true, featured: true }, include: vehicleInclude, orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }], take: 4 });
 });
 
 export const getVehicleBySlug = cache(async (slug: string): Promise<DatabaseVehicle | null> => {
   return prisma.vehicle.findFirst({ where: { slug, active: true }, include: vehicleInclude });
+});
+
+export const getSimilarVehicles = cache(async (currentVehicleId: string, categoryId: string): Promise<DatabaseVehicle[]> => {
+  const vehicles = await prisma.vehicle.findMany({
+    where: { active: true, id: { not: currentVehicleId } },
+    include: vehicleInclude,
+    orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }],
+    take: 12,
+  });
+  return vehicles.sort((a, b) => Number(b.categoryId === categoryId) - Number(a.categoryId === categoryId)).slice(0, 3);
 });
 
 export const getVehicleCategories = cache(async () => {

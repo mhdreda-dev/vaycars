@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
+import { getAgencySettingsRecord } from "@/lib/getAgencySettings";
 import { prisma } from "@/lib/prisma";
 
 export const getPickupLocations = cache(async () => {
@@ -8,5 +9,5 @@ export const getPickupLocations = cache(async () => {
 });
 
 export const getSiteSettings = cache(async () => {
-  return prisma.siteSettings.findUnique({ where: { id: "site-settings" }, include: { defaultPickupLocation: true } });
+  return getAgencySettingsRecord();
 });
