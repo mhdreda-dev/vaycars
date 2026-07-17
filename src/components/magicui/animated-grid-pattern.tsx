@@ -1,0 +1,85 @@
+"use client";
+
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ComponentPropsWithoutRef,
+} from "react";
+import { motion } from "framer-motion";
+
+export interface AnimatedGridPatternProps extends ComponentPropsWithoutRef<"svg"> {
+  width?: number;
+  height?: number;
+  x?: number;
+  y?: number;
+  strokeDasharray?: number;
+  numSquares?: number;
+  maxOpacity?: number;
+  duration?: number;
+  repeatDelay?: number;
+}
+
+type Square = { id: number; pos: [number, number]; iteration: number };
+
+export function AnimatedGridPattern({
+  width = 40,
+  height = 40,
+  x = -1,
+  y = -1,
+  strokeDasharray = 0,
+  numSquares = 50,
+  className,
+  maxOpacity = 0.5,
+  duration = 4,
+  repeatDelay = 0.5,
+  ...props
+}: AnimatedGridPatternProps) {
+  const id = useId();
+  const containerRef = useRef<SVGSVGElement | null>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [squares, setSquares] = useState<Square[]>([]);
+  const getPos = useCallback((): [number, number] => [
+    Math.floor((Math.random() * dimensions.width) / width),
+    Math.floor((Math.random() * dimensions.height) / height),
+  ], [dimensions.height, dimensions.width, height, width]);
+  const generateSquares = useCallback((count: number) => Array.from({ length: count }, (_, id) => ({ id, pos: getPos(), iteration: 0 })), [getPos]);
+  const updateSquarePosition = useCallback((squareId: number) => {
+    setSquares((current) => {
+      const square = current[squareId];
+      if (!square || square.id !== squareId) return current;
+      const next = current.slice();
+      next[squareId] = { ...square, pos: getPos(), iteration: square.iteration + 1 };
+      return next;
+    });
+  }, [getPos]);
+
+  useEffect(() => {
+    if (!dimensions.width || !dimensions.height) return;
+    const frame = requestAnimationFrame(() => setSquares(generateSquares(numSquares)));
+    return () => cancelAnimationFrame(frame);
+  }, [dimensions.width, dimensions.height, generateSquares, numSquares]);
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+    const observer = new ResizeObserver(([entry]) => {
+      if (!entry) return;
+      setDimensions((current) => {
+        const next = { width: entry.contentRect.width, height: entry.contentRect.height };
+        return current.width === next.width && current.height === next.height ? current : next;
+      });
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  return <svg ref={containerRef} aria-hidden="true" className={`pointer-events-none absolute inset-0 h-full w-full fill-gray-400/30 stroke-gray-400/30 ${className ?? ""}`} {...props}>
+    <defs><pattern id={id} width={width} height={height} patternUnits="userSpaceOnUse" x={x} y={y}><path d={`M.5 ${height}V.5H${width}`} fill="none" strokeDasharray={strokeDasharray} /></pattern></defs>
+    <rect width="100%" height="100%" fill={`url(#${id})`} />
+    <svg x={x} y={y} className="overflow-visible">
+      {squares.map(({ pos: [squareX, squareY], id: squareId, iteration }, index) => <motion.rect key={`${squareId}-${iteration}`} initial={{ opacity: 0 }} animate={{ opacity: maxOpacity }} transition={{ duration, repeat: 1, delay: index * 0.1, repeatType: "reverse", repeatDelay }} onAnimationComplete={() => updateSquarePosition(squareId)} width={width - 1} height={height - 1} x={squareX * width + 1} y={squareY * height + 1} fill="currentColor" strokeWidth="0" />)}
+    </svg>
+  </svg>;
+}

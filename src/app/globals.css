@@ -21,6 +21,16 @@ body {
 html { scroll-behavior: smooth; }
 * { border-color: #e2e8f0; }
 
+@keyframes magicui-shimmer-slide {
+  to { transform: translate(calc(100cqw - 100%), 0); }
+}
+
+@keyframes magicui-spin-around {
+  0%, 100% { transform: translateZ(0) rotate(0); }
+  15%, 35% { transform: translateZ(0) rotate(90deg); }
+  65%, 85% { transform: translateZ(0) rotate(270deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
